@@ -1,0 +1,78 @@
+(page "index.html"
+      (:require [hoplon.history :as history]))
+
+#_(def clicks (cell 0))
+
+#_(def clicks-even? (cell= (even? clicks)))
+
+#_(def color (cell= (if clicks-even? "blue" "red")))
+
+#_(def history (cell []))
+#_(add-watch clicks :history #(swap! history conj %3))
+#_(cell= (print history))
+
+(def ex (cell {:squat {:set1 5 :set2 6 :set3 0} :press {:set1 3 :set2 4 :set3 11}})) 
+
+(cell= (print ex))
+
+(def route (history/history-cell))
+
+(cell= (print route))
+
+(html
+ (head
+  (link :href "app.css" :rel "stylesheet" :type "text/css")
+  (link :href "bulma.css" :rel "stylesheet" :type "text/css")
+  (html-meta :name "viewport" :content "width=device-width, initial-scale=1"))
+ (body
+  (h1 "testing1")
+  (section :class "hero is-primary is-fullheight"
+           (div :class "hero-body"
+                (div :class "container"
+                     (div :class "columns is-centered"                          
+                          (div :class "column is-4-desktop"                              
+                               (div :class "tabs is-centered"
+                                    (ul
+                                     (li :class "is-active"                                         
+                                         (a :href "#/Workout/Squat" "Squat"))
+                                     (li              
+                                      (a :href "#/Workout/Press" "Press"))))
+                               (case-tpl route
+                                         ""
+                                         (div "None")
+                                         "/Workout/Squat"
+                                         (form :class "field box"
+                                               (label "Set 1")
+                                               (div :class "control"
+                                                    (input :type "number" :value (:set1 (:squat @ex)) :change #(swap! ex assoc-in [:squat :set1] @%)))
+                                               (label "Set 2")
+                                               (div :class "control"
+                                                    (input :type "number" :value (:set2 (:squat @ex)) :change #(swap! ex assoc-in [:squat :set2] @%)))
+                                               (label "Set 3 - AMRAP")
+                                               (div :class "control"
+                                                    (input :type "number" :value (:set3 (:squat @ex)) :change #(swap! ex assoc-in [:squat :set3] @%))))
+                                         "/Workout/Press"
+                                         (form :class "field box hidden"
+                                               (label "Set 1")
+                                               (div :class "control"
+                                                    (input :type "number" :value (:set1 (:press @ex)) :change #(swap! ex assoc-in [:press :set1] @%)))
+                                               (label "Set 2")
+                                               (div :class "control"
+                                                    (input :type "number" :value (:set2 (:press @ex)) :change #(swap! ex assoc-in [:press :set2] @%)))
+                                               (label "Set 3 - AMRAP")
+                                               (div :class "control"
+                                                    (input :type "number" :value (:set3 (:press @ex)) :change #(swap! ex assoc-in [:press :set3] @%))))
+                                         ))
+                          #_(div :class "box" "Stuff 2")))))))
+
+
+(let* [G__13615 (clojure.core/delay (div "blob"))
+       G__13616 (clojure.core/delay (div "pants"))
+       G__13617 (clojure.core/delay (div "None"))
+       tpl__13505__auto__ (clojure.core/fn [expr__13506__auto__]
+                            (hoplon.core/safe-deref
+                             (clojure.core/case expr__13506__auto__
+                               "/blob" G__13615
+                               "/pants" G__13616
+                               G__13617)))]
+  ((javelin.core/formula tpl__13505__auto__) route))
